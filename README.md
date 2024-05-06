@@ -15,3 +15,6 @@ An advanced antibot for webdriver such as
 ## Author & Copyright
 
 Aurin Aegerter (aka Steve, kaliiiiiiiiii)
+
+## Thanks
+- [selenium-detector](https://github.com/HMaker/HMaker.github.io/tree/master/selenium-detector)
