@@ -61,6 +61,9 @@ feel free to
 - open PRs
 - use the discussions
 
+## Licence
+see [LICENSE](https://github.com/kaliiiiiiiiii/brotector/blob/master/LICENSE)
+
 ## Author & Copyright
 
 Aurin Aegerter (aka Steve, kaliiiiiiiiii)
