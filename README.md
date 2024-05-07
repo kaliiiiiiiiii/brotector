@@ -55,6 +55,12 @@ see [stackoverflow-answer](https://stackoverflow.com/a/75776883/20443541)
 Mouse event not dispatched by a user detected
 see [`Event.isTrusted`](https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted) property
 
+## Contribution
+feel free to
+- open `[feature request]`s for driver detections
+- open PRs
+- use the discussions
+
 ## Author & Copyright
 
 Aurin Aegerter (aka Steve, kaliiiiiiiiii)
