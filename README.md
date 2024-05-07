@@ -8,6 +8,7 @@ An advanced antibot for webdriver such as
 - [ ] [puppeteer](https://github.com/puppeteer/puppeteer) (no test yet)
   - [ ] [puppeteer-extra-stealth](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth#puppeteer-extra-plugin-stealth---) (no test yet)
   - [x] [pyppeteer](https://github.com/pyppeteer/pyppeteer)
+    - [ ] [pyppeteer-stealth](https://github.com/MeiK2333/pyppeteer_stealth) (no test yet)
 - [x] [playwright](https://github.com/microsoft/playwright-python)
   - [x] [botright](https://github.com/Vinyzu/Botright)
     - [ ] with uc-playwright
