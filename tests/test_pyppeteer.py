@@ -1,6 +1,7 @@
 import pytest
 import asyncio
 from pyppeteer import launch
+from pyppeteer_stealth import stealth
 from utils import __hml_path__, Detected
 from selenium_driverless.utils.utils import find_chrome_executable
 
@@ -35,8 +36,20 @@ async def test_pyppeteer():
 
 @pytest.mark.asyncio
 async def test_pyppeteer_stealthy():
-    browser = await launch(headless=False, executablePath=find_chrome_executable(), args=['--disable-blink-features=AutomationControlled'])
+    browser = await launch(headless=False, executablePath=find_chrome_executable(),
+                           args=['--disable-blink-features=AutomationControlled'])
     page = await browser.newPage()
     with pytest.raises(Detected):
+        await detect(page)
+    await browser.close()
+
+
+@pytest.mark.asyncio
+async def test_pyppeteer_stealth():
+    browser = await launch(headless=False, executablePath=find_chrome_executable(),
+                           args=['--disable-blink-features=AutomationControlled'])
+    page = await browser.newPage()
+    with pytest.raises(Detected):
+        await stealth(page)
         await detect(page)
     await browser.close()

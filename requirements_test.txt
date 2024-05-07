@@ -4,6 +4,8 @@ pyppeteer
 playwright
 botright
 nodriver
+selenium-driverless
+pyppeteer-stealth
 
 pytest-asyncio
 pytest

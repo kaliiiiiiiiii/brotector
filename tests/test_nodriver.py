@@ -3,7 +3,6 @@ import nodriver as uc
 from utils import __hml_path__, Detected
 import pytest
 import asyncio
-import time
 
 
 async def nodriver_eval(page, script: str, timeout: float = 5):
@@ -18,7 +17,10 @@ async def detect(page: nodriver.Tab):
         return brotector.detections
     """
     await page.get(__hml_path__)
-    await asyncio.sleep(1)
+    await asyncio.sleep(0.5)
+    click_target = await page.query_selector("#click-target")
+    await click_target.click()
+    await asyncio.sleep(0.5)
     for _ in range(2):
         detections = await nodriver_eval(page, script)
         if len(detections) > 0:
