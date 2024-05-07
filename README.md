@@ -1,5 +1,6 @@
 # Brotector
 
+
 An advanced antibot for webdriver such as 
 - [x] [selenium](https://github.com/SeleniumHQ/selenium/tree/trunk/py#selenium-client-driver)
   - [x] [undetected-chromedriver](https://github.com/ultrafunkamsterdam/undetected-chromedriver)
@@ -20,3 +21,6 @@ For the tests, each driver
 ## Author & Copyright
 
 Aurin Aegerter (aka Steve, kaliiiiiiiiii)
+
+## Thanks
+- [selenium-detector](https://github.com/HMaker/HMaker.github.io/tree/master/selenium-detector)
