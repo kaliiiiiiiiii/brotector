@@ -3,6 +3,7 @@ undetected-chromedriver
 pyppeteer
 playwright
 botright
+nodriver
 
 pytest-asyncio
 pytest

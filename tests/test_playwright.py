@@ -76,3 +76,14 @@ async def test_botright():
             await detect(browser)
     finally:
         await botright_client.close()
+
+
+@pytest.mark.asyncio
+async def test_uc_botright():
+    botright_client = await botright.Botright(use_undetected_playwright=True)
+    try:
+        browser = await botright_client.new_browser(channel="chrome")
+        with pytest.raises(Detected):
+            await detect(browser)
+    finally:
+        await botright_client.close()
