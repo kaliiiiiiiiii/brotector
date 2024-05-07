@@ -29,7 +29,7 @@ function get_worker_response(fn) {
         }
     }
 
-const startTime = new Date();
+const startTime = window.performance.now();
 class Brotector {
   constructor(on_detection, interval=100) {
     // on_detection(data:dict)
@@ -42,7 +42,7 @@ class Brotector {
     this.init_done = this.init()
   }
   log(data){
-    data["timeSinceLoad"] = ((new Date()).getTime() - startTime.getTime()) / 1000;
+    data["msSinceLoad"] = window.performance.now() - startTime;
     this.detections.push(data)
     this._detections.push(data.detection)
     this.on_detection(data)
@@ -59,7 +59,7 @@ class Brotector {
   }
   test_navigator_webdriver(){
     if(navigator.webdriver === true){
-        this.log({detection:"navigator.webdriver"})
+        this.log({detection:"navigator.webdriver", score:1})
     }
   }
   test_window_cdc(){
@@ -68,7 +68,7 @@ class Brotector {
        prop.match(/cdc_[a-z0-9]/ig) && matches.push(prop)
     }
     if(matches.length > 0){
-        this.log({detection:"window.cdc", matches:matches})
+        this.log({detection:"window.cdc", data:matches, score:1})
     }
   }
   test_stackLookup() {
@@ -86,12 +86,12 @@ class Brotector {
                 }
             });
         console.debug(e);
-        if(stackLookup){this.log({detection:key})}
+        if(stackLookup){this.log({detection:key, score:0.8})}
     }
   }
   hook_mouseEvents(window) {
     if (!this._isMouseHooked){
-        for (event of ["mousedown", "mouseup", "mousemove", "click", "touchstart", "touchend", "touchmove", "touch", "scroll"]){
+        for (event of ["mousedown", "mouseup", "mousemove", "click", "touchstart", "touchend", "touchmove", "touch", "wheel"]){
             document.addEventListener(event,this.mouseEventHandler.bind(this))
         }
     }
@@ -103,19 +103,19 @@ class Brotector {
             is_touch = true;
             e = e.touches[0] || e.changedTouches[0];
         }
-    var is_bot = e.pageY == e.screenY && e.pageX == e.screenX;
-    if (is_bot && 1 >= outerHeight - innerHeight) {
+    if(e.pageY == e.screenY && e.pageX == e.screenX){var score=1}else{var score=0};
+    if (score !== 0 && 1 >= outerHeight - innerHeight) {
             // fullscreen
-            is_bot = false;
+            score = 0;
         };
-    if (is_bot && is_touch && navigator.userAgentData.mobile) {
-            is_bot = "maybe"; // mobile touch can have e.pageY == e.screenY && e.pageX == e.screenX
+    if (score !== 0 && is_touch && navigator.userAgentData.mobile) {
+            score = 0.5; // mobile touch can have e.pageY == e.screenY && e.pageX == e.screenX
         }
     if (e.isTrusted === false) {
-            this.log({"detection":"Input.untrusted", "type":e.type})
+            this.log({"detection":"Input.untrusted", "type":e.type, score:1})
         }
-    else if (is_bot){
-        this.log({"detection":key, "type":e.type, "is_bot":is_bot})
+    else if (score > 0){
+        this.log({"detection":key, "type":e.type, "score":score})
     }
   }
 }

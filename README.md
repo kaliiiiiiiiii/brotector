@@ -3,7 +3,7 @@
 
 An advanced antibot for webdriver such as 
 - [x] [driverless](https://github.com/kaliiiiiiiiii/Selenium-Driverless)
-  - [ ] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches)
+  - [ ] **with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches)**
 - [x] [selenium](https://github.com/SeleniumHQ/selenium/tree/trunk/py#selenium-client-driver)
   - [x] [undetected-chromedriver](https://github.com/ultrafunkamsterdam/undetected-chromedriver)
   - [x] [seleniumbase](https://github.com/seleniumbase/SeleniumBase)
@@ -12,9 +12,12 @@ An advanced antibot for webdriver such as
   - [x] [pyppeteer](https://github.com/pyppeteer/pyppeteer)
     - [x] [pyppeteer-stealth](https://github.com/MeiK2333/pyppeteer_stealth)
 - [x] [playwright](https://github.com/microsoft/playwright-python)
-  - [x] [botright](https://github.com/Vinyzu/Botright)
-    - [ ] with [uc-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
   - [x] [undetected-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
+    - [ ] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches) (no test yet)
+  - [x] [botright](https://github.com/Vinyzu/Botright)
+    - [x] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches) (no test yet)
+    - [x] with [uc-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
+      - [ ] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches) (no test yet)
 - [x] [nodriver](https://github.com/ultrafunkamsterdam/nodriver)
 
 For the tests, each driver
