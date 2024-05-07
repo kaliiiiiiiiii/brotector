@@ -42,7 +42,7 @@ async function log(data){
     row.appendChild(cell)
 
     var cell = row.insertCell(1);
-    cell.textContent = msSinceLoad.toFixed(2)
+    cell.textContent = msSinceLoad.toFixed(2).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, "'")
     row.appendChild(cell)
 
     var cell = row.insertCell(2);
@@ -57,7 +57,8 @@ async function log(data){
     cell.textContent = JSON.stringify(data, null, 2);
 
     document.querySelector("#avg-score").textContent = avg(scores).toFixed(2)
-    document.querySelector("#avg-ms-load").textContent =avg(perfs).toFixed(2)
+    document.querySelector("#avg-ms-load").textContent =avg(perfs).toFixed(2).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, "'")
+    document.querySelector("#table-keys").setAttribute("bgcolor", "red")
 }
 async function main(){
     window.brotector = new Brotector(log)
