@@ -1,2 +1,7 @@
 selenium
 undetected-chromedriver
+pyppeteer
+playwright
+
+pytest-asyncio
+pytest

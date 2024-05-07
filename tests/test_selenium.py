@@ -28,7 +28,7 @@ def detect(driver):
         return brotector.detections
     """
     time.sleep(0.1)
-    for i_ in range(2):
+    for _ in range(2):
         detections = sel_eval(driver, script)
         if len(detections) > 0:
             print("\n")
