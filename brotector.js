@@ -91,7 +91,7 @@ class Brotector {
   }
   hook_mouseEvents(window) {
     if (!this._isMouseHooked){
-        for (event of ["mousedown", "mouseup", "mousemove", "click", "touchstart", "touchend", "touch", "scroll"]){
+        for (event of ["mousedown", "mouseup", "mousemove", "click", "touchstart", "touchend", "touchmove", "touch", "scroll"]){
             document.addEventListener(event,this.mouseEventHandler.bind(this))
         }
     }
@@ -99,7 +99,7 @@ class Brotector {
   mouseEventHandler(e) {
     const key = "Input.cordinatesLeak"
     var is_touch = false
-    if (e.type == "touchstart") {
+    if (["touchstart", "touchend", "touchmove", "touch"].includes(e.type)) {
             is_touch = true;
             e = e.touches[0] || e.changedTouches[0];
         }
@@ -112,9 +112,9 @@ class Brotector {
             is_bot = "maybe"; // mobile touch can have e.pageY == e.screenY && e.pageX == e.screenX
         }
     if (e.isTrusted === false) {
-            is_bot = true;
+            this.log({"detection":"Input.untrusted", "type":e.type})
         }
-    if (is_bot){
+    else if (is_bot){
         this.log({"detection":key, "type":e.type, "is_bot":is_bot})
     }
   }

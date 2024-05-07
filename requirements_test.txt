@@ -6,6 +6,7 @@ botright
 nodriver
 selenium-driverless
 pyppeteer-stealth
+cdp-patches
 
 pytest-asyncio
 pytest

@@ -1,14 +1,13 @@
 from selenium_driverless import webdriver
 from selenium_driverless.types.target import Target
-from selenium_driverless.types.deserialize import JSObject
 from selenium_driverless.types.by import By
+from cdp_patches.input import AsyncInput
 from utils import __hml_path__, Detected
 import pytest
 import asyncio
-import time
 
 
-async def detect(target: Target):
+async def detect(target: Target, cdp_patches_input):
     script = """
         await brotector.init_done; 
         return brotector.detections
@@ -16,7 +15,11 @@ async def detect(target: Target):
     await target.get(__hml_path__)
     await asyncio.sleep(0.5)
     click_target = await target.find_element(By.ID, "click-target")
-    await click_target.click()
+    if cdp_patches_input:
+        x, y = await click_target.mid_location()
+        await cdp_patches_input.click("left",x, y)
+    else:
+        await click_target.click()
     await asyncio.sleep(0.5)
     for _ in range(2):
         detections = await target.eval_async(script)
@@ -33,4 +36,11 @@ async def detect(target: Target):
 async def test_driverless():
     async with webdriver.Chrome() as driver:
         with pytest.raises(Detected):
-            await detect(driver.current_target)
+            await detect(driver.current_target, cdp_patches_input=False)
+
+
+@pytest.mark.asyncio
+async def test_driverless_with_cdp_patches():
+    async with webdriver.Chrome() as driver:
+        with pytest.raises(Detected):
+            await detect(driver.current_target, cdp_patches_input=await AsyncInput(browser=driver))

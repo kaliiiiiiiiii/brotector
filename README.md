@@ -2,21 +2,20 @@
 
 
 An advanced antibot for webdriver such as 
+- [x] [driverless](https://github.com/kaliiiiiiiiii/Selenium-Driverless)
+  - [ ] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches)
 - [x] [selenium](https://github.com/SeleniumHQ/selenium/tree/trunk/py#selenium-client-driver)
   - [x] [undetected-chromedriver](https://github.com/ultrafunkamsterdam/undetected-chromedriver)
   - [x] [seleniumbase](https://github.com/seleniumbase/SeleniumBase)
-- [ ] [puppeteer](https://github.com/puppeteer/puppeteer) (no test yet)
-  - [ ] [puppeteer-extra-stealth](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth#puppeteer-extra-plugin-stealth---) (no test yet)
+- [ ] [puppeteer](https://github.com/puppeteer/puppeteer) (not test yet)
+  - [ ] [puppeteer-extra-stealth](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth#puppeteer-extra-plugin-stealth---) (not test yet)
   - [x] [pyppeteer](https://github.com/pyppeteer/pyppeteer)
-    - [ ] [pyppeteer-stealth](https://github.com/MeiK2333/pyppeteer_stealth) (no test yet)
+    - [x] [pyppeteer-stealth](https://github.com/MeiK2333/pyppeteer_stealth)
 - [x] [playwright](https://github.com/microsoft/playwright-python)
   - [x] [botright](https://github.com/Vinyzu/Botright)
-    - [x] with [uc-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
-      - [ ] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches)
+    - [ ] with [uc-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
   - [x] [undetected-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
 - [x] [nodriver](https://github.com/ultrafunkamsterdam/nodriver)
-- [x] [driverless](https://github.com/kaliiiiiiiiii/Selenium-Driverless)
-  - [ ] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches)
 
 For the tests, each driver
 - has to perform at least one mouse event (such as click, mousemove, ...)
@@ -47,6 +46,11 @@ occurs due to [crbug#1477537](https://bugs.chromium.org/p/chromium/issues/detail
 #### window.cdc
 a leak specific to **chromedriver** (selenium) \
 see [stackoverflow-answer](https://stackoverflow.com/a/75776883/20443541)
+
+----
+#### "Input.untrusted"
+Mouse event not dispatched by a user detected
+see [`Event.isTrusted`](https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted) property
 
 ## Author & Copyright
 
