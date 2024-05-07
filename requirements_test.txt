@@ -2,6 +2,7 @@ selenium
 undetected-chromedriver
 pyppeteer
 playwright
+botright
 
 pytest-asyncio
 pytest
