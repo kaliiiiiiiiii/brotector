@@ -25,7 +25,7 @@ async function getHighEntropyValues(){
     return data
 }
 
-function get_worker_response(fn) {
+function get_worker_response(fn, timeout=undefined) {
         try {
             const URL = window.URL || window.webkitURL;
             var fn = "self.onmessage=async function(e){postMessage(await (" + fn.toString() + ")())}";
@@ -42,6 +42,7 @@ function get_worker_response(fn) {
             var url = URL.createObjectURL(blob);
             var worker = new Worker(url);
             var _promise = new Promise((resolve, reject) => {
+                if(timeout !== undefined){setTimeout(()=>{worker.terminate(); reject(new Error("timeout"))}, timeout)}
                 worker.onmessage = (m) => {
                     worker.terminate();
                     resolve(m.data);
@@ -67,8 +68,9 @@ class Brotector {
     this._detections = []
     this.interval = interval
     this.init_done = this.init()
-    this._getting_debugger_timing = false
+    this._doing_stacklookup = false
     this._devtools_open = false
+    this._runtime_detected = false
   }
   log(data){
     data["msSinceLoad"] = window.performance.now() - startTime;
@@ -103,11 +105,11 @@ class Brotector {
     }
   }
   async test_stackLookup() {
+
     const key = "runtime.enabled.stacklookup"
     var type = "webdriver"
     var score = 1
-    if(this._getting_debugger_timing){return}
-    if (!(this._detections.includes(key))){
+    if (this._runtime_detected === false){
         let stackLookup = false;
         const e = new Error()
         // there might be several ways to catch property access from console print functions
@@ -121,15 +123,23 @@ class Brotector {
             });
         console.debug(e);
         if(stackLookup){
-            this._getting_debugger_timing = true
-            var time = await get_worker_response(getDebuggerTiming)
-            if (time>100){
+            if(this._doing_stacklookup){return}
+            this._doing_stacklookup = true
+            this._runtime_detected = true
+            var start = globalThis.performance.now();
+
+            try{await get_worker_response(()=>{debugger}, 200)}
+            catch(e){if(e.message !== "timeout"){throw e}}
+
+            var time = globalThis.performance.now()-start
+            if (time>180){
                 type = "devtools"
                 score = score * 0.5
                 this._devtools_open = true
+
             }else{this._devtools_open = false}
             this.log({detection:key, score:score, "type":type})
-            this._getting_debugger_timing = false
+            this._doing_stacklookup = false
         }
     }
   }

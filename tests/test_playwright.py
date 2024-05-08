@@ -1,6 +1,6 @@
 import pytest
 import asyncio
-from utils import __hml_path__, Detected
+from utils import __hml_path__, Detected, assert_detections
 from playwright import async_api
 from undetected_playwright import async_api as uc_async_api
 import botright
@@ -22,7 +22,7 @@ async def detect(context: async_api.BrowserContext):
     cdp_session = await context.new_cdp_session(page)
     await page.goto(__hml_path__)
     await asyncio.sleep(0.5)
-    click_target = await page.query_selector("#click-target")
+    click_target = await page.query_selector("#copy-button")
     await click_target.click()
     await asyncio.sleep(0.5)
     for _ in range(2):
@@ -30,6 +30,7 @@ async def detect(context: async_api.BrowserContext):
             await brotector.init_done; 
             return brotector.detections
         """)
+        assert_detections(detections)
         if len(detections) > 0:
             print("\n")
             print(detections)

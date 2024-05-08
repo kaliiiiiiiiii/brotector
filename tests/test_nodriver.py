@@ -1,6 +1,6 @@
 import nodriver
 import nodriver as uc
-from utils import __hml_path__, Detected
+from utils import __hml_path__, Detected, assert_detections
 import pytest
 import asyncio
 
@@ -18,11 +18,12 @@ async def detect(page: nodriver.Tab):
     """
     await page.get(__hml_path__)
     await asyncio.sleep(0.5)
-    click_target = await page.query_selector("#click-target")
+    click_target = await page.query_selector("#copy-button")
     await click_target.click()
     await asyncio.sleep(0.5)
     for _ in range(2):
         detections = await nodriver_eval(page, script)
+        assert_detections(detections)
         if len(detections) > 0:
             print("\n")
             print(detections)

@@ -4,7 +4,7 @@ import pytest
 from selenium import webdriver
 import seleniumbase
 import undetected_chromedriver as uc_webdriver
-from utils import __hml_path__, Detected
+from utils import __hml_path__, Detected, assert_detections
 
 
 def sel_eval(driver: webdriver.Chrome, script: str, timeout: float = 5):
@@ -19,7 +19,9 @@ def sel_eval(driver: webdriver.Chrome, script: str, timeout: float = 5):
 
 
 def detect(driver):
+    is_sb = False
     if isinstance(driver, seleniumbase.BaseCase):
+        is_sb = True
         driver.uc_open_with_reconnect(__hml_path__, 0.1)
         driver.disconnect()
     else:
@@ -30,9 +32,12 @@ def detect(driver):
     """
     time.sleep(1)
     for _ in range(2):
-        driver.connect()
+        if is_sb:
+            driver.connect()
         detections = sel_eval(driver, script)
-        driver.disconnect()
+        assert_detections(detections)
+        if is_sb:
+            driver.disconnect()
         if len(detections) > 0:
             print("\n")
             print(detections)
