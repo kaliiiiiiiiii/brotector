@@ -16,8 +16,7 @@ An advanced antibot for webdriver such as
     - [ ] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches) (no test yet)
   - [x] [botright](https://github.com/Vinyzu/Botright)
     - [x] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches) (no test yet)
-    - [x] with [uc-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
-      - [ ] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches) (no test yet)
+    - [ ] with [uc-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
 - [x] [nodriver](https://github.com/ultrafunkamsterdam/nodriver)
 
 For the tests, each driver
@@ -56,6 +55,13 @@ see [stackoverflow-answer](https://stackoverflow.com/a/75776883/20443541)
 #### "Input.untrusted"
 Mouse event not dispatched by a user detected
 see [`Event.isTrusted`](https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted) property
+
+----
+#### canvasMouseVisualizer
+`CanvasRenderingContext2D.arc` has been called with
+- cordinates +-5px at current mouse position
+- canvas +-1px covers the whole page
+- canvas passes pointerEvents through
 
 ----
 #### Headless

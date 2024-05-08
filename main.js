@@ -1,16 +1,3 @@
-/*
-var func = "beginPath"
-var obj = CanvasRenderingContext2D
-proxy = new Proxy(obj.prototype[func], {
-  apply: (target, thisArg, argumentsList) => {
-    console.log("canvas beginPath detected")
-    return Reflect.apply(target, thisArgument, argumentsList)
-  }
-}
-)
-Object.defineProperty(obj, func, {get:proxy})
-*/
-
 const scores = []
 const perfs = []
 

@@ -9,6 +9,17 @@ function isEmpty() {
     return true;
 };
 
+function hookFunc(obj, func, callback){
+    proxy = new Proxy(globalThis[obj].prototype[func], {
+      apply: (target, thisArg, argumentsList) => {
+        callback(target, thisArg, argumentsList)
+        return Reflect.apply(target, thisArg, argumentsList)
+      }
+        }
+    );
+    Object.defineProperty(globalThis[obj].prototype, func, {value:proxy})
+}
+
 async function getHighEntropyValues(){
     const n = globalThis.navigator? globalThis.navigator: globalThis.WorkerNavigator
     data = await n.userAgentData.getHighEntropyValues([
@@ -66,12 +77,14 @@ class Brotector {
 
     this.on_detection = on_detection
     this.detections = []
+    this.mousePos = [0, 0]
     this._detections = []
     this.interval = interval
     this.init_done = this.init()
     this._doing_stacklookup = false
-    this._devtools_open = false
+    this.devtools_open = false
     this._runtime_detected = false
+    this._canvasMouseVisualizer = false
   }
   log(data){
     data["msSinceLoad"] = window.performance.now() - startTime;
@@ -85,6 +98,7 @@ class Brotector {
     this.test_window_cdc()
     this.test_HighEntropyValues()
     this.hook_mouseEvents()
+    this.hook_canvasVisualize()
     setInterval(this.intervalled.bind(this), this.interval)
     return this.detections
   }
@@ -136,9 +150,9 @@ class Brotector {
             if (time>180){
                 type = "devtools"
                 score = score * 0.5
-                this._devtools_open = true
+                this.devtools_open = true
 
-            }else{this._devtools_open = false}
+            }else{this.devtools_open = false}
             this.log({detection:key, score:score, "type":type})
             this._doing_stacklookup = false
         }
@@ -153,7 +167,7 @@ class Brotector {
        this.log({"detection":"Headless", "type":"HighEntropyValues.empty", score:0.9})
     }
   }
-  hook_mouseEvents(window) {
+  hook_mouseEvents() {
     if (!this._isMouseHooked){
         for (let event of ["mousedown", "mouseup", "mousemove", "pointermove", "click", "touchstart", "touchend", "touchmove", "touch", "wheel"]){
             document.addEventListener(event,this.mouseEventHandler.bind(this))
@@ -167,6 +181,10 @@ class Brotector {
             is_touch = true;
             e = e.touches[0] || e.changedTouches[0];
         }
+
+    if(e.type === "mousemove"){
+        this.mousePos = [e.clientX, e.clientY]
+    }
 
     if(e.pageY == e.screenY && e.pageX == e.screenX){var score=1}else{var score=0};
     if (score !== 0 && 1 >= outerHeight - innerHeight) {
@@ -187,5 +205,24 @@ class Brotector {
     else if (score > 0){
         this.log({"detection":key, "type":e.type, "score":score})
     }
+  }
+  hook_canvasVisualize() {
+    hookFunc("CanvasRenderingContext2D", "arc", this.canvasVisualizeHandler.bind(this))
+  }
+  canvasVisualizeHandler(target, thisArg, argumentsList){
+      if(this._canvasMouseVisualizer){return}
+      var pos = this.mousePos
+      const canvas = thisArg.canvas
+      var range = 5
+      if(
+        canvas.style.position === "fixed" && canvas.style.pointerEvents == "none" &&
+        canvas.style.left[0] === "0" && canvas.style.top[0] === "0" &&
+        ((canvas.width - 1) <= window.innerWidth) && ((canvas.height - 1) <= window.innerHeight) &&
+        ((pos[0] - range) <= argumentsList[0] && (pos[0] + range) >= argumentsList[0]) &&
+        ((pos[0] - range) <= argumentsList[0] && (pos[0] + range) >= argumentsList[0])
+      ){
+        this._canvasMouseVisualizer = true
+        this.log({"detection":"canvasMouseVisualizer",  "score":0.8})
+      }
   }
 }
