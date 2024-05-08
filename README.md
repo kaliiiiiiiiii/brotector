@@ -22,7 +22,7 @@ An advanced antibot for webdriver such as
 
 For the tests, each driver
 - has to perform at least one mouse event (such as click, mousemove, ...)
-- is running headull
+- is running headfull
 - running on Google-Chrome if possible
 
 
