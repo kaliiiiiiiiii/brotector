@@ -1,6 +1,7 @@
 import typing
 
 from selenium_driverless import webdriver
+from selenium_driverless.utils.utils import read
 from selenium_driverless.types.target import Target
 from selenium_driverless.types.by import By
 from cdp_patches.input import AsyncInput
@@ -9,12 +10,15 @@ import pytest
 import asyncio
 
 
-async def detect(target: Target, cdp_patches_input:typing.Union[AsyncInput, typing.Literal[False, None]]=False):
+async def detect(target: Target, cdp_patches_input: typing.Union[AsyncInput, typing.Literal[False, None]] = False,
+                 add_visualizer=False):
     script = """
         await brotector.init_done; 
         return brotector.detections
     """
     await target.get(__hml_path__)
+    if add_visualizer:
+        await target.execute_script(script=await read("/files/js/show_mousemove.js", sel_root=True))
     await asyncio.sleep(0.5)
     click_target = await target.find_element(By.ID, "copy-button")
     if cdp_patches_input:
@@ -53,9 +57,14 @@ async def test_driverless_with_cdp_patches():
 @pytest.mark.asyncio
 async def test_headless():
     options = webdriver.ChromeOptions()
-    # options.add_argument("--user-agent=TestUA")
     options.add_argument("--headless=new")
     async with webdriver.Chrome(options=options) as driver:
-        print(driver._options.debugger_address)
         with pytest.raises(Detected):
             await detect(driver.current_target, cdp_patches_input=False)
+
+
+@pytest.mark.asyncio
+async def test_canvas_visualizer():
+    async with webdriver.Chrome() as driver:
+        with pytest.raises(Detected):
+            await detect(driver.current_target, await AsyncInput(browser=driver), add_visualizer=True)
