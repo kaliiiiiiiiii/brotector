@@ -28,6 +28,8 @@ For the tests, each driver
 
 ## detections
 
+<img src="assets/example_screenshot_headless.png" alt="drawing" width="80%"/>
+
 #### navigator.webdriver
 
 `navigator.webdriver` (JavaScript) is set to `true`
@@ -37,8 +39,8 @@ For the tests, each driver
 
 [`Runtime`](https://chromedevtools.github.io/devtools-protocol/tot/Runtime) is enabled \
 occurs when:
-  - [`Runtime.enable`](https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-enable) or [`Console.enable`](https://chromedevtools.github.io/devtools-protocol/tot/Console/#method-enable) (CDP) has been called (most libraries do that)
-  - the user opens the devtools
+  - [`Runtime.enable`](https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-enable) or [`Console.enable`](https://chromedevtools.github.io/devtools-protocol/tot/Console/#method-enable) (CDP) has been called (most libraries do that, type=webdriver)
+  - the user opens the devtools (type=devtools)
 
 -----
 #### Input.cordinatesLeak
@@ -54,6 +56,11 @@ see [stackoverflow-answer](https://stackoverflow.com/a/75776883/20443541)
 #### "Input.untrusted"
 Mouse event not dispatched by a user detected
 see [`Event.isTrusted`](https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted) property
+
+----
+#### Headless
+- [`navigator.userAgentData.getHighEntropyValues`](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorUAData/getHighEntropyValues) has empty data \
+  (type=`HighEntropyValues.empty`)
 
 ## Contribution
 feel free to

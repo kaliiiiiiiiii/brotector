@@ -3,6 +3,28 @@ function getDebuggerTiming(){
     debugger;
     return globalThis.performance.now()-start
 }
+
+function isEmpty() {
+    for (var prop in this) if (this.hasOwnProperty(prop)) return false;
+    return true;
+};
+
+async function getHighEntropyValues(){
+    const n = globalThis.navigator? globalThis.navigator: globalThis.WorkerNavigator
+    data = await n.userAgentData.getHighEntropyValues([
+                "architecture",
+                "bitness",
+                "formFactor",
+                "model",
+                "platform",
+                "platformVersion",
+                "uaFullVersion",
+                "wow64"
+    ])
+    data["userAgent"] = n.userAgent
+    return data
+}
+
 function get_worker_response(fn) {
         try {
             const URL = window.URL || window.webkitURL;
@@ -36,7 +58,7 @@ function get_worker_response(fn) {
 
 const startTime = window.performance.now();
 class Brotector {
-  constructor(on_detection, interval=10) {
+  constructor(on_detection, interval=70) {
     // on_detection(data:dict)
     this._isMouseHooked = false
 
@@ -58,8 +80,10 @@ class Brotector {
     this.test_navigator_webdriver()
     this.test_stackLookup()
     this.test_window_cdc()
+    this.test_HighEntropyValues()
     this.hook_mouseEvents()
     setInterval(this.intervalled.bind(this), this.interval)
+    return this.detections
   }
   async intervalled(){
     this.test_stackLookup()
@@ -109,9 +133,18 @@ class Brotector {
         }
     }
   }
+  async test_HighEntropyValues(){
+    let data = await get_worker_response(getHighEntropyValues)
+    var score = 0
+    if(data.architecture === "" &&
+       data.model === "" && data.platformVersion == "" &&
+       data.uaFullVersion === "" && data.bitness == ""){
+       this.log({"detection":"Headless", "type":"HighEntropyValues.empty", score:0.9})
+    }
+  }
   hook_mouseEvents(window) {
     if (!this._isMouseHooked){
-        for (event of ["mousedown", "mouseup", "mousemove", "click", "touchstart", "touchend", "touchmove", "touch", "wheel"]){
+        for (let event of ["mousedown", "mouseup", "mousemove", "click", "touchstart", "touchend", "touchmove", "touch", "wheel"]){
             document.addEventListener(event,this.mouseEventHandler.bind(this))
         }
     }
