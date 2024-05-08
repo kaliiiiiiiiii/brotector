@@ -47,6 +47,7 @@ function get_worker_response(fn, timeout=undefined) {
                     worker.terminate();
                     resolve(m.data);
                 };
+                worker.onerror = (e){reject(new Error("Worker onerror")}
             });
             worker.postMessage("call");
             return _promise;
