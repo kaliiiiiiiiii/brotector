@@ -22,7 +22,7 @@ An advanced antibot for webdriver such as
 
 For the tests, each driver
 - has to perform at least one mouse event (such as click, mousemove, ...)
-- is running headull
+- is running headfull
 - running on Google-Chrome if possible
 
 
@@ -54,6 +54,15 @@ see [stackoverflow-answer](https://stackoverflow.com/a/75776883/20443541)
 #### "Input.untrusted"
 Mouse event not dispatched by a user detected
 see [`Event.isTrusted`](https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted) property
+
+## Contribution
+feel free to
+- open `[feature request]`s for driver detections
+- open PRs
+- use the discussions
+
+## Licence
+see [LICENSE](https://github.com/kaliiiiiiiiii/brotector/blob/master/LICENSE)
 
 ## Author & Copyright
 
