@@ -154,7 +154,7 @@ class Brotector {
   }
   hook_mouseEvents(window) {
     if (!this._isMouseHooked){
-        for (let event of ["mousedown", "mouseup", "mousemove", "click", "touchstart", "touchend", "touchmove", "touch", "wheel"]){
+        for (let event of ["mousedown", "mouseup", "mousemove", "pointermove", "click", "touchstart", "touchend", "touchmove", "touch", "wheel"]){
             document.addEventListener(event,this.mouseEventHandler.bind(this))
         }
     }
@@ -166,6 +166,7 @@ class Brotector {
             is_touch = true;
             e = e.touches[0] || e.changedTouches[0];
         }
+
     if(e.pageY == e.screenY && e.pageX == e.screenX){var score=1}else{var score=0};
     if (score !== 0 && 1 >= outerHeight - innerHeight) {
             // fullscreen
