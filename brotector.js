@@ -1,3 +1,8 @@
+function getDebuggerTiming(){
+    var start = globalThis.performance.now();
+    debugger;
+    return globalThis.performance.now()-start
+}
 function get_worker_response(fn) {
         try {
             const URL = window.URL || window.webkitURL;
@@ -31,7 +36,7 @@ function get_worker_response(fn) {
 
 const startTime = window.performance.now();
 class Brotector {
-  constructor(on_detection, interval=100) {
+  constructor(on_detection, interval=10) {
     // on_detection(data:dict)
     this._isMouseHooked = false
 
@@ -40,6 +45,8 @@ class Brotector {
     this._detections = []
     this.interval = interval
     this.init_done = this.init()
+    this._getting_debugger_timing = false
+    this._devtools_open = false
   }
   log(data){
     data["msSinceLoad"] = window.performance.now() - startTime;
@@ -71,8 +78,11 @@ class Brotector {
         this.log({detection:"window.cdc", data:matches, score:1})
     }
   }
-  test_stackLookup() {
+  async test_stackLookup() {
     const key = "runtime.enabled.stacklookup"
+    var type = "webdriver"
+    var score = 1
+    if(this._getting_debugger_timing){return}
     if (!(this._detections.includes(key))){
         let stackLookup = false;
         const e = new Error()
@@ -86,7 +96,17 @@ class Brotector {
                 }
             });
         console.debug(e);
-        if(stackLookup){this.log({detection:key, score:0.8})}
+        if(stackLookup){
+            this._getting_debugger_timing = true
+            var time = await get_worker_response(getDebuggerTiming)
+            if (time>100){
+                type = "devtools"
+                score = score * 0.5
+                this._devtools_open = true
+            }else{this._devtools_open = false}
+            this.log({detection:key, score:score, "type":type})
+            this._getting_debugger_timing = false
+        }
     }
   }
   hook_mouseEvents(window) {
@@ -114,6 +134,11 @@ class Brotector {
     if (e.isTrusted === false) {
             this.log({"detection":"Input.untrusted", "type":e.type, score:1})
         }
+    else if(document.activeElement === e.srcElement &&
+            document.activeElement === e.target &&
+            e.type === "click" && e.x === 0 && e.y === 0 &&
+            e.screenX === 0 &&  e.screenY === 0 &&
+            e.clientX === 0 && e.clientY === 0){} // click over select via TAB + (ENTER or SPACE)
     else if (score > 0){
         this.log({"detection":key, "type":e.type, "score":score})
     }

@@ -20,16 +20,19 @@ def sel_eval(driver: webdriver.Chrome, script: str, timeout: float = 5):
 
 def detect(driver):
     if isinstance(driver, seleniumbase.BaseCase):
-        driver.uc_open_with_reconnect(__hml_path__, 3)
+        driver.uc_open_with_reconnect(__hml_path__, 0.1)
+        driver.disconnect()
     else:
         driver.get(__hml_path__)
     script = """
         await brotector.init_done; 
         return brotector.detections
     """
-    time.sleep(0.1)
+    time.sleep(1)
     for _ in range(2):
+        driver.connect()
         detections = sel_eval(driver, script)
+        driver.disconnect()
         if len(detections) > 0:
             print("\n")
             print(detections)
