@@ -148,7 +148,9 @@ class Brotector {
                     return "";
                     }
                 });
-        var c = console.context();
+        var c = undefined
+        try{c = console.context("Brotector: ");}catch{}
+        if (c===undefined){c=console}
         c.debug(e);
         this._nameLookupCount = 0
         c.debug(new Error(""))
