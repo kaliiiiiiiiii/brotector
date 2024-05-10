@@ -107,7 +107,15 @@ class Brotector {
                 get: (() => {this._nameLookupCount += 1; return "Error"}).bind(this)
                 });
     // instead of setInterval
-    (async () => {while(true){this.intervalled.bind(this)(); await new Promise((resolve)=>{setTimeout(resolve, this.interval)})}})()
+    (async () => {while(true){
+            this.intervalled.bind(this)();
+            await new Promise(
+                ((resolve)=>{
+                        setTimeout(resolve, this.interval)
+                    }).bind(this)
+                )
+        }
+    }).bind(this)()
 
     await new Promise((resolve)=>{setTimeout(resolve, 200)})
     return this.detections

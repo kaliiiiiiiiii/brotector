@@ -5,6 +5,8 @@ from pyppeteer_stealth import stealth
 from utils import __hml_path__, Detected, assert_detections
 from selenium_driverless.utils.utils import find_chrome_executable
 
+extra_args = ["--no-fist-run", "--disable-fre", "--no-default-browser-check", "--disable-features=FedCm"]
+
 
 async def detect(page):
     await page.goto(__hml_path__)
@@ -28,7 +30,7 @@ async def detect(page):
 @pytest.mark.asyncio
 async def test_pyppeteer():
     browser = await launch(headless=False, executablePath=find_chrome_executable(),
-                           ignoreDefaultArgs=True, args=["--no-fist-run"])
+                           ignoreDefaultArgs=True, args=[*extra_args])
     page = await browser.newPage()
     with pytest.raises(Detected):
         await detect(page)
@@ -38,7 +40,7 @@ async def test_pyppeteer():
 @pytest.mark.asyncio
 async def test_pyppeteer_stealthy():
     browser = await launch(headless=False, executablePath=find_chrome_executable(),
-                           args=['--disable-blink-features=AutomationControlled', "--no-fist-run"])
+                           args=['--disable-blink-features=AutomationControlled', *extra_args])
     page = await browser.newPage()
     with pytest.raises(Detected):
         await detect(page)
@@ -48,7 +50,7 @@ async def test_pyppeteer_stealthy():
 @pytest.mark.asyncio
 async def test_pyppeteer_stealth():
     browser = await launch(headless=False, executablePath=find_chrome_executable(),
-                           args=['--disable-blink-features=AutomationControlled', "--no-fist-run"])
+                           args=['--disable-blink-features=AutomationControlled', *extra_args])
     page = await browser.newPage()
     with pytest.raises(Detected):
         await stealth(page)
