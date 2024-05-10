@@ -34,7 +34,7 @@ For the tests, each driver
 `navigator.webdriver` (JavaScript) is set to `true`
 
 -----
-#### runtime.enabled.stacklookup
+#### runtime.enabled
 
 [`Runtime`](https://chromedevtools.github.io/devtools-protocol/tot/Runtime) is enabled \
 score here refers to the certainty of the 
@@ -85,3 +85,4 @@ Aurin Aegerter (aka Steve, kaliiiiiiiiii)
 ## Thanks // References
 - [selenium-detector](https://github.com/HMaker/HMaker.github.io/tree/master/selenium-detector)
 - [jdetects](https://github.com/zswang/jdetects)
+- thanks @ProseccoRider - some further `Runtime.enable` detection insights

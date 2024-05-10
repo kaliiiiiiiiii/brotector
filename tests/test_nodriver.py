@@ -18,7 +18,9 @@ async def detect(page: nodriver.Tab):
     """
     await page.get(__hml_path__)
     await asyncio.sleep(0.5)
-    click_target = await page.query_selector("#copy-button")
+    click_target = None
+    while click_target is None:
+        click_target = await page.query_selector("#copy-button")
     await click_target.click()
     await asyncio.sleep(0.5)
     for _ in range(2):

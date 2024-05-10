@@ -1,4 +1,3 @@
-var count = 0
 function getDebuggerTiming(){
     var start = globalThis.performance.now();
     debugger;
@@ -86,6 +85,7 @@ class Brotector {
     this._runtime_detected = false
     this._canvasMouseVisualizer = false
     this._lastStackLookupCount = 0
+    this._nameLookupCount = 0
   }
   log(data){
     data["msSinceLoad"] = window.performance.now() - startTime;
@@ -95,17 +95,25 @@ class Brotector {
   }
   async init(){
     this.test_navigator_webdriver()
-    this.test_stackLookup()
+    this.test_runtimeEnabled()
     this.test_window_cdc()
     this.test_HighEntropyValues()
     this.hook_mouseEvents()
     this.hook_canvasVisualize()
-    setInterval(this.intervalled.bind(this), this.interval)
+
+    Object.defineProperty(Error.prototype, 'name', {
+                configurable: false,
+                enumerable: false,
+                get: (() => {this._nameLookupCount += 1; return "Error"}).bind(this)
+                });
+    // instead of setInterval
+    (async () => {while(true){this.intervalled.bind(this)(); await new Promise((resolve)=>{setTimeout(resolve, this.interval)})}})()
+
     await new Promise((resolve)=>{setTimeout(resolve, 200)})
     return this.detections
   }
   async intervalled(){
-    this.test_stackLookup()
+    this.test_runtimeEnabled()
   }
   test_navigator_webdriver(){
     if(navigator.webdriver === true){
@@ -121,9 +129,9 @@ class Brotector {
         this.log({detection:"window.cdc", data:matches, score:1})
     }
   }
-  async test_stackLookup() {
+  async test_runtimeEnabled() {
 
-    const key = "runtime.enabled.stacklookup"
+    const key = "runtime.enabled"
     var type = "webdriver"
     var score = 1
 
@@ -132,17 +140,14 @@ class Brotector {
         // stacklookup
         var stackLookupCount = 0
         const e = new Error()
-            Object.defineProperty(e, 'stack', {
+        Object.defineProperty(e, 'stack', {
                 configurable: false,
                 enumerable: false,
                 get: function() {
                     stackLookupCount += 1
-                    return "\u200B".repeat(count);
+                    return "";
                     }
                 });
-        console.debug(e);
-        count += 1
-        if(stackLookupCount > 0){
             if(this._doing_devtoolsTest){return}
             this._doing_devtoolsTest = true
             var start = globalThis.performance.now();
@@ -152,10 +157,13 @@ class Brotector {
             catch(e){if(e.message !== "timeout"){throw e}}
 
             if(time === undefined){time = globalThis.performance.now()-start}
-
-            if(stackLookupCount > 1 && time>180){
+            c.clear()
+            if(stackLookupCount > 1 && time>180 && nameLookupCount >= 2){
                 type = "devtools"
                 score = 0.1
+            }else if((stackLookupCount > 1 || nameLookupCount === 3) && time>180){
+                type = "devtools"
+                score = 0.2
             }else if (time>180){
                 score = 0.3
                 type = "devtools"
@@ -164,7 +172,8 @@ class Brotector {
 
             this.log({detection:key, score:score, "type":type,
                 data:{
-                    "stackLookupCount":stackLookupCount
+                    "stackLookupCount":stackLookupCount,
+                    "nameLookupCount":nameLookupCount
                     }
                 }
                 )
