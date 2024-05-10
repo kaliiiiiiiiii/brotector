@@ -148,6 +148,12 @@ class Brotector {
                     return "";
                     }
                 });
+        var c = console.context();
+        c.debug(e);
+        this._nameLookupCount = 0
+        c.debug(new Error(""))
+        const nameLookupCount = this._nameLookupCount
+        if(stackLookupCount > 0 || nameLookupCount >= 2){
             if(this._doing_devtoolsTest){return}
             this._doing_devtoolsTest = true
             var start = globalThis.performance.now();
