@@ -43,9 +43,16 @@ async function log(data){
     var cell = row.insertCell(4);
     cell.textContent = JSON.stringify(data, null, 2);
 
-    document.querySelector("#avg-score").textContent = avg(scores).toFixed(2)
+    var avg_score = avg(scores).toFixed(2)
+    document.querySelector("#avg-score").textContent =avg_score
     document.querySelector("#avg-ms-load").textContent =avg(perfs).toFixed(2).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, "'")
-    document.querySelector("#table-keys").setAttribute("bgcolor", "red")
+
+    var color = "red"
+    if(avg_score < 0.4){
+        color = "#ff8800"
+    }
+    if(score <= 0.2){color="#FFC000"};
+    document.querySelector("#table-keys").setAttribute("bgcolor", color)
 }
 async function main(){
     window.brotector = new Brotector(log)
