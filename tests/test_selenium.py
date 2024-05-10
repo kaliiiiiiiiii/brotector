@@ -4,6 +4,7 @@ import pytest
 from selenium import webdriver
 import seleniumbase
 import undetected_chromedriver as uc_webdriver
+from selenium.webdriver.common.by import By
 from utils import __hml_path__, Detected, assert_detections
 
 
@@ -26,18 +27,24 @@ def detect(driver):
         driver.disconnect()
     else:
         driver.get(__hml_path__)
-    script = """
-        await brotector.init_done; 
-        return brotector.detections
-    """
+
+    if is_sb:
+        driver.connect()
+        sel_eval(driver, "setTimeout(() => {document.querySelector('#copy-button').click()}, 200)")
+        driver.disconnect()
+    else:
+        time.sleep(0.2)
+        click_target = driver.find_element(By.ID,"copy-button")
+        click_target.click()
+
     time.sleep(1)
     for _ in range(2):
         if is_sb:
             driver.connect()
-        detections = sel_eval(driver, script)
-        assert_detections(detections)
+        detections = sel_eval(driver, "return await brotector.init_done")
         if is_sb:
             driver.disconnect()
+        assert_detections(detections)
         if len(detections) > 0:
             print("\n")
             print(detections)

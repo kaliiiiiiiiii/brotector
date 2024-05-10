@@ -37,6 +37,7 @@ For the tests, each driver
 #### runtime.enabled.stacklookup
 
 [`Runtime`](https://chromedevtools.github.io/devtools-protocol/tot/Runtime) is enabled \
+score here refers to the certainty of the 
 occurs when:
   - [`Runtime.enable`](https://chromedevtools.github.io/devtools-protocol/tot/Runtime/#method-enable) or [`Console.enable`](https://chromedevtools.github.io/devtools-protocol/tot/Console/#method-enable) (CDP) has been called (most libraries do that, type=webdriver)
   - the user opens the devtools (type=devtools)
@@ -81,5 +82,6 @@ see [LICENSE](https://github.com/kaliiiiiiiiii/brotector/blob/master/LICENSE)
 
 Aurin Aegerter (aka Steve, kaliiiiiiiiii)
 
-## Thanks
+## Thanks // References
 - [selenium-detector](https://github.com/HMaker/HMaker.github.io/tree/master/selenium-detector)
+- [jdetects](https://github.com/zswang/jdetects)

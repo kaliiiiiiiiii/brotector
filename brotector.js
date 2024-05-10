@@ -1,9 +1,9 @@
+var count = 0
 function getDebuggerTiming(){
     var start = globalThis.performance.now();
     debugger;
-    return globalThis.performance.now()-start
+    return (globalThis.performance.now()-start)
 }
-
 function isEmpty() {
     for (var prop in this) if (this.hasOwnProperty(prop)) return false;
     return true;
@@ -71,7 +71,7 @@ function get_worker_response(fn, timeout=undefined) {
 
 const startTime = window.performance.now();
 class Brotector {
-  constructor(on_detection, interval=70) {
+  constructor(on_detection, interval=50) {
     // on_detection(data:dict)
     this._isMouseHooked = false
 
@@ -81,10 +81,11 @@ class Brotector {
     this._detections = []
     this.interval = interval
     this.init_done = this.init()
-    this._doing_stacklookup = false
+    this._doing_devtoolsTest = false
     this.devtools_open = false
     this._runtime_detected = false
     this._canvasMouseVisualizer = false
+    this._lastStackLookupCount = 0
   }
   log(data){
     data["msSinceLoad"] = window.performance.now() - startTime;
@@ -100,6 +101,7 @@ class Brotector {
     this.hook_mouseEvents()
     this.hook_canvasVisualize()
     setInterval(this.intervalled.bind(this), this.interval)
+    await new Promise((resolve)=>{setTimeout(resolve, 200)})
     return this.detections
   }
   async intervalled(){
@@ -124,37 +126,50 @@ class Brotector {
     const key = "runtime.enabled.stacklookup"
     var type = "webdriver"
     var score = 1
-    if (this._runtime_detected === false){
-        let stackLookup = false;
-        const e = new Error()
-        // there might be several ways to catch property access from console print functions
-        Object.defineProperty(e, 'stack', {
-            configurable: false,
-            enumerable: false,
-            get: function() {
-                stackLookup = true;
-                return '';
-                }
-            });
-        console.debug(e);
-        if(stackLookup){
-            if(this._doing_stacklookup){return}
-            this._doing_stacklookup = true
-            this._runtime_detected = true
-            var start = globalThis.performance.now();
 
-            try{await get_worker_response(()=>{debugger}, 200)}
+    if (this._lastStackLookupCount === 0){
+
+        // stacklookup
+        var stackLookupCount = 0
+        const e = new Error()
+            Object.defineProperty(e, 'stack', {
+                configurable: false,
+                enumerable: false,
+                get: function() {
+                    stackLookupCount += 1
+                    return "\u200B".repeat(count);
+                    }
+                });
+        console.debug(e);
+        count += 1
+        if(stackLookupCount > 0){
+            if(this._doing_devtoolsTest){return}
+            this._doing_devtoolsTest = true
+            var start = globalThis.performance.now();
+            var time = undefined
+            await new Promise((resolve) => {setTimeout(resolve, 200)})
+            try{var time = await get_worker_response(getDebuggerTiming, 200)}
             catch(e){if(e.message !== "timeout"){throw e}}
 
-            var time = globalThis.performance.now()-start
-            if (time>180){
-                type = "devtools"
-                score = score * 0.5
-                this.devtools_open = true
+            if(time === undefined){time = globalThis.performance.now()-start}
 
+            if(stackLookupCount > 1 && time>180){
+                type = "devtools"
+                score = 0.1
+            }else if (time>180){
+                score = 0.3
+                type = "devtools"
+                this.devtools_open = true
             }else{this.devtools_open = false}
-            this.log({detection:key, score:score, "type":type})
-            this._doing_stacklookup = false
+
+            this.log({detection:key, score:score, "type":type,
+                data:{
+                    "stackLookupCount":stackLookupCount
+                    }
+                }
+                )
+            this._doing_devtoolsTest = false
+            this._lastStackLookupCount = stackLookupCount
         }
     }
   }
