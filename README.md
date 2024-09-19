@@ -23,8 +23,8 @@ For the tests, each webdriver has at least to click the button with the **ID** `
 
 ## Detections
 
-<img src="assets/example_screenshot_headless.png" alt="drawing" width="49%"/>
-<img src="assets/brotector_error_message.png" alt="drawing" width="49%"/>
+<img src="assets/example_screenshot_headless.png" width="48%"/>
+<img src="assets/brotector_error_message.png" width="48%"/>
 
 #### navigator.webdriver
 
