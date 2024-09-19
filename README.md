@@ -1,33 +1,30 @@
 # Brotector
 
 
-An advanced antibot for webdriver such as 
+Detects webdrivers such as:
 - [x] [driverless](https://github.com/kaliiiiiiiiii/Selenium-Driverless)
   - [ ] **with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches)**
 - [x] [selenium](https://github.com/SeleniumHQ/selenium/tree/trunk/py#selenium-client-driver)
   - [x] [undetected-chromedriver](https://github.com/ultrafunkamsterdam/undetected-chromedriver)
   - [x] [seleniumbase](https://github.com/seleniumbase/SeleniumBase)
 - [ ] [puppeteer](https://github.com/puppeteer/puppeteer) (not test yet)
-  - [ ] [puppeteer-extra-stealth](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth#puppeteer-extra-plugin-stealth---) (not test yet)
+  - [ ] [puppeteer-extra-stealth](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth#puppeteer-extra-plugin-stealth---) (no test yet)
   - [x] [pyppeteer](https://github.com/pyppeteer/pyppeteer)
     - [x] [pyppeteer-stealth](https://github.com/MeiK2333/pyppeteer_stealth)
 - [x] [playwright](https://github.com/microsoft/playwright-python)
   - [x] [undetected-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
     - [ ] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches) (no test yet)
   - [x] [botright](https://github.com/Vinyzu/Botright)
-    - [x] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches) (no test yet)
     - [ ] with [uc-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
 - [x] [nodriver](https://github.com/ultrafunkamsterdam/nodriver)
 
-For the tests, each driver
-- has to perform at least one mouse event (such as click, mousemove, ...)
-- is running headfull
-- running on Google-Chrome if possible
+For the tests, each webdriver has at least to click the button with the **ID** `clickHere`
 
 
-## detections
+## Detections
 
-<img src="assets/example_screenshot_headless.png" alt="drawing" width="80%"/>
+<img src="assets/example_screenshot_headless.png" alt="drawing" width="49%"/>
+<img src="assets/brotector_error_message.png" alt="drawing" width="49%"/>
 
 #### navigator.webdriver
 
@@ -65,9 +62,19 @@ see [`Event.isTrusted`](https://developer.mozilla.org/en-US/docs/Web/API/Event/i
 - canvas passes pointerEvents through
 
 ----
-#### Headless
-- [`navigator.userAgentData.getHighEntropyValues`](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorUAData/getHighEntropyValues) has empty data \
-  (type=`HighEntropyValues.empty`)
+#### UAOverride
+[`navigator.userAgentData.getHighEntropyValues`](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorUAData/getHighEntropyValues) has empty data \
+  (type=`HighEntropyValues.empty`, UA meaning UserAgent)
+
+----
+#### SeleniumScriptInjection
+- Detects when selenium tries to [inject a script](https://github.com/kaliiiiiiiiii/brotector/issues/6) (even used for finding elements)
+- makes selenium (any chromedriver-based framework) crash (bypassable for testing [`?selCrash=false`](https://kaliiiiiiiiii.github.io/brotector/?selCrash=false))
+- just **don't use selenium** lol
+
+----
+#### PWinitScript
+- detects `playwright>=1.46.1`, induced with [commit](https://github.com/microsoft/playwright/commit/c9e673c6dca746384338ab6bb0cf63c7e7caa9b2#diff-087773eea292da9db5a3f27de8f1a2940cdb895383ad750c3cd8e01772a35b40R909-R924)
 
 ## Contribution
 feel free to

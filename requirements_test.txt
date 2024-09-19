@@ -1,8 +1,11 @@
 selenium
+seleniumbase
 undetected-chromedriver
+webdriver-manager
 pyppeteer
 playwright
-botright
+undetected-playwright-patch
+botright==0.5.1
 nodriver
 selenium-driverless
 pyppeteer-stealth
@@ -10,3 +13,6 @@ cdp-patches
 
 pytest-asyncio
 pytest
+pytest-subtests
+
+tf-keras

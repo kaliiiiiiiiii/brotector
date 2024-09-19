@@ -22,7 +22,7 @@ async def detect(context: async_api.BrowserContext):
     cdp_session = await context.new_cdp_session(page)
     await page.goto(__hml_path__)
     await asyncio.sleep(0.5)
-    click_target = await page.query_selector("#copy-button")
+    click_target = await page.query_selector("#clickHere")
     await click_target.click()
     await asyncio.sleep(0.5)
     for _ in range(2):

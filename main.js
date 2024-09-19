@@ -1,6 +1,10 @@
 const scores = []
 const perfs = []
 
+const queryString = window.location.search
+const urlParams = new URLSearchParams(queryString)
+const selCrash = !(urlParams.get("selCrash") == "false")
+
 function avg(array){
     sum = array.reduce((a,c) => a + c, 0)
     return sum / array.length
@@ -9,6 +13,10 @@ function copyAsJSON(){
     const data = JSON.stringify(window.brotector.detections, null, 2)
     navigator.clipboard.writeText(data)
 };
+function OnClicked(){
+    let button = document.querySelector("#clickHere")
+    button.textContent = "Clicked :)"
+}
 async function log(data){
     console.log(data)
     const table = document.querySelector("#detections")
@@ -55,6 +63,6 @@ async function log(data){
     document.querySelector("#table-keys").setAttribute("bgcolor", color)
 }
 async function main(){
-    window.brotector = new Brotector(log)
+    window.brotector = new Brotector(log, 50, selCrash)
 }
 window.onload = main

@@ -1,3 +1,23 @@
+const chromedriverSourceMatches = [
+"WebDriver", "W3C", "Execute-Script", "cdc_adoQpoasnfa76pfcZLmcfl", "Chromium", "shadow-6066-11e4-a52e-4f735466cecf",
+"element-6066-11e4-a52e-4f735466cecf", "STALE_ELEMENT_REFERENCE", "crbug.com/40229283",
+"shadow root is detached from the current frame","stale element not found in the current frame"]
+
+const brotectorBanner = `
+
+
+    You've been detected by
+    ###################################################################
+    #  ____                   _                   _                   #
+    # | __ )   _ __    ___   | |_    ___    ___  | |_    ___    _ __  #
+    # |  _ \\  | '__|  / _ \\  | __|  / _ \\  / __| | __|  / _ \\  | '__| #
+    # | |_) | | |    | (_) | | |_  |  __/ | (__  | |_  | (_) | | |    #
+    # |____/  |_|     \\___/   \\__|  \\___|  \\___|  \\__|  \\___/  |_|    #
+    ###################################################################
+    https://github.com/kaliiiiiiiiii/brotector
+
+`
+
 function getDebuggerTiming(){
     var start = globalThis.performance.now();
     debugger;
@@ -70,11 +90,12 @@ function get_worker_response(fn, timeout=undefined) {
 
 const startTime = window.performance.now();
 class Brotector {
-  constructor(on_detection, interval=50) {
+  constructor(on_detection, interval=50, selCrash=true) {
     // on_detection(data:dict)
     this._isMouseHooked = false
 
     this.on_detection = on_detection
+    this.selCrash = selCrash
     this.detections = []
     this.mousePos = [0, 0]
     this._detections = []
@@ -86,6 +107,8 @@ class Brotector {
     this._canvasMouseVisualizer = false
     this._lastStackLookupCount = 0
     this._nameLookupCount = 0
+    this.__pwInitScripts = false
+    this.__playwright__binding__ = false
   }
   log(data){
     data["msSinceLoad"] = window.performance.now() - startTime;
@@ -96,10 +119,12 @@ class Brotector {
   async init(){
     this.test_navigator_webdriver()
     this.test_runtimeEnabled()
+    this.test_PWinitScripts()
     this.test_window_cdc()
     this.test_HighEntropyValues()
     this.hook_mouseEvents()
     this.hook_canvasVisualize()
+    this.hook_SeleniumScriptInjection()
 
     Object.defineProperty(Error.prototype, 'name', {
                 configurable: false,
@@ -122,6 +147,7 @@ class Brotector {
   }
   async intervalled(){
     this.test_runtimeEnabled()
+    this.test_PWinitScripts()
   }
   test_navigator_webdriver(){
     if(navigator.webdriver === true){
@@ -136,6 +162,17 @@ class Brotector {
     if(matches.length > 0){
         this.log({detection:"window.cdc", data:matches, score:1})
     }
+  }
+  test_PWinitScripts(){
+    const keys = ["__pwInitScripts", "__playwright__binding__"]
+    var key
+    for (key of keys){
+        if((globalThis[key] !== undefined) && !this[key]){
+            this[key] = true
+            this.log({detection:"PWinitScript", data:{"value":globalThis[key]}, score:1, type:key})
+        }
+    }
+
   }
   async test_runtimeEnabled() {
 
@@ -204,7 +241,7 @@ class Brotector {
     if(data.architecture === "" &&
        data.model === "" && data.platformVersion == "" &&
        data.uaFullVersion === "" && data.bitness == ""){
-       this.log({"detection":"Headless", "type":"HighEntropyValues.empty", score:0.9})
+       this.log({"detection":"UA_Override", "type":"HighEntropyValues.empty", score:0.9})
     }
   }
   hook_mouseEvents() {
@@ -264,5 +301,24 @@ class Brotector {
         this._canvasMouseVisualizer = true
         this.log({"detection":"canvasMouseVisualizer",  "score":0.8})
       }
+  }
+  hook_SeleniumScriptInjection(){
+    hookFunc("Function", "apply", this.SeleniumScriptInjectionHandler.bind(this))
+  }
+  SeleniumScriptInjectionHandler(target, thisArg, argumentsList){
+    let code = thisArg.toString()
+    let matches = {}
+    let testStr = undefined
+    for (testStr of chromedriverSourceMatches){
+        if(code.indexOf(testStr) !== -1){
+            if (matches[testStr] == undefined){matches[testStr] = 0}
+            matches[testStr] += 1
+        }
+    }
+    const len = Object.keys(matches).length
+    if (len > 0){
+        this.log({"detection":"SeleniumScriptInjection", "score":0.9, data:{args:argumentsList,matches:matches}})
+        if(this.selCrash){throw Error(brotectorBanner)}
+    }
   }
 }

@@ -6,8 +6,8 @@ import asyncio
 
 
 async def nodriver_eval(page, script: str, timeout: float = 5):
-    cmd = nodriver.cdp.runtime.evaluate(expression="(async ()=>{" + script + "})()", await_promise=True, return_by_value=True,include_command_line_api=True)
-    res = await asyncio.wait_for(page.send(cmd),timeout=timeout)
+    cmd = nodriver.cdp.runtime.evaluate(expression="(async ()=>{" + script + "})()", await_promise=True, return_by_value=True, include_command_line_api=True)
+    res = await asyncio.wait_for(page.send(cmd), timeout=timeout)
     return res[0].value
 
 
@@ -20,7 +20,7 @@ async def detect(page: nodriver.Tab):
     await asyncio.sleep(0.5)
     click_target = None
     while click_target is None:
-        click_target = await page.query_selector("#copy-button")
+        click_target = await page.query_selector("#clickHere")
     await click_target.click()
     await asyncio.sleep(0.5)
     for _ in range(2):

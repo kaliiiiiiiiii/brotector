@@ -11,6 +11,7 @@ extra_args = ["--no-fist-run", "--disable-fre", "--no-default-browser-check", "-
 async def detect(page):
     await page.goto(__hml_path__)
     await asyncio.sleep(0.1)
+    await page.click("#clickHere")
     for _ in range(2):
         detections = await page.evaluate("""
             async ()=>{
@@ -29,8 +30,8 @@ async def detect(page):
 
 @pytest.mark.asyncio
 async def test_pyppeteer():
-    browser = await launch(headless=False, executablePath=find_chrome_executable(),
-                           ignoreDefaultArgs=True, args=[*extra_args])
+    browser = await asyncio.wait_for(launch(headless=False, executablePath=find_chrome_executable(),
+                           ignoreDefaultArgs=False, args=[*extra_args]),10)
     page = await browser.newPage()
     with pytest.raises(Detected):
         await detect(page)
@@ -39,8 +40,8 @@ async def test_pyppeteer():
 
 @pytest.mark.asyncio
 async def test_pyppeteer_stealthy():
-    browser = await launch(headless=False, executablePath=find_chrome_executable(),
-                           args=['--disable-blink-features=AutomationControlled', *extra_args])
+    browser = await asyncio.wait_for(launch(headless=False, executablePath=find_chrome_executable(),
+                           args=['--disable-blink-features=AutomationControlled', *extra_args]), 10)
     page = await browser.newPage()
     with pytest.raises(Detected):
         await detect(page)
@@ -49,8 +50,8 @@ async def test_pyppeteer_stealthy():
 
 @pytest.mark.asyncio
 async def test_pyppeteer_stealth():
-    browser = await launch(headless=False, executablePath=find_chrome_executable(),
-                           args=['--disable-blink-features=AutomationControlled', *extra_args])
+    browser = await asyncio.wait_for(launch(headless=False, executablePath=find_chrome_executable(),
+                           args=['--disable-blink-features=AutomationControlled', *extra_args]),10)
     page = await browser.newPage()
     with pytest.raises(Detected):
         await stealth(page)
