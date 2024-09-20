@@ -63,6 +63,14 @@ async function log(data){
     document.querySelector("#table-keys").setAttribute("bgcolor", color)
 }
 async function main(){
+    window.prevFocus = document.body
+    window.currFocus = document.body
+    window.addEventListener("focusin", ()=>{
+        window.prevFocus = window.currFocus;
+        if(document.activeElement){window.currFocus = document.activeElement}
+    })
+    document.querySelector("#clickHere").addEventListener("focusin", ()=>{document.activeElement.blur();window.prevFocus.focus()})
+
     window.brotector = new Brotector(log, 50, selCrash)
 }
 window.onload = main
