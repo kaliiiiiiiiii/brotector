@@ -3,3 +3,5 @@ yolov8m-seg.pt
 downloaded_files/*
 .idea/*
 */__pycache__/*
+node_modules/*
+package-lock.json

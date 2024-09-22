@@ -5,7 +5,8 @@ const chromedriverSourceMatches = [
 
 const stackScriptInjectionMatches = {
     "pyppeteer":"    at [\\s\\S]* \\(__pyppeteer_evaluation_script__:[0-9]+:[0-9]+\\)",
-    "puppeteer":"    at [\\s\\S]* \\(__puppeteer_evaluation_script__:[0-9]+:[0-9]+\\)"
+    "puppeteer":"    at [\\s\\S]* \\(__puppeteer_evaluation_script__:[0-9]+:[0-9]+\\)",
+    "puppeteer":"    at pptr:evaluate;file%3A%2F%2F%2F[\\s\\S]*%3A[0-9]+%3A[0-9]+:[0-9]+:[0-9]+"
 }
 
 const hookers = [
@@ -125,6 +126,7 @@ class Brotector {
     this.hook_mouseEvents()
     this.hook_canvasVisualize()
     this.hook_SeleniumScriptInjection()
+    await this.test_pdfStyle()
 
     for (const [obj, func] of hookers){
         this.hookFunc(obj, func, ()=>{})
@@ -170,7 +172,7 @@ class Brotector {
       for (const line of stack.split("\n")){
         for (const [type, regex] of Object.entries(stackScriptInjectionMatches)){
             if(line.match(regex)){
-                this.log({detection:"stack.signature", type:type, score:0.9, data:{stack:stack, hook:hook}})
+                this.log({detection:"stack.signature", type:type, score:1, data:{stack:stack, hook:hook}})
             }
         }
       }
@@ -268,6 +270,30 @@ class Brotector {
        data.model === "" && data.platformVersion == "" &&
        data.uaFullVersion === "" && data.bitness == ""){
        this.log({"detection":"UA_Override", "type":"HighEntropyValues.empty", score:0.9})
+    }
+  }
+  async test_pdfStyle(){
+    const iframe = document.createElement("iframe")
+    iframe.style.height = 0
+    iframe.style.width = 0
+    iframe.style.position = "absolute"
+    iframe.style.x = 0
+    iframe.style.y = 0
+    iframe.style.opacity = 0
+    iframe.src = "assets/test.pdf";
+    document.body.appendChild(iframe);
+    const style = await new Promise((resolve, reject)=>{
+        iframe.onload = ()=>{
+            try{
+                if(iframe.contentDocument === null) {console.error("Could not load PDF iframe propperly, possibly running on file: url"); resolve(undefined)}
+                const result = iframe.contentDocument.querySelector('style')?.textContent||false
+                document.body.removeChild(iframe)
+                resolve(result)
+            }catch(e){reject(e)}
+        }
+    })
+    if(style){
+        this.log({detection:"pdfStyle",type:"puppeteer", score:0.9, data:{style:style}})
     }
   }
   hook_mouseEvents() {

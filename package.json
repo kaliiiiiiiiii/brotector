@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "dependencies": {
+    "puppeteer": "^23.4.0",
+    "static-server": "^3.0.0"
+  }
+}
