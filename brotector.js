@@ -3,6 +3,17 @@ const chromedriverSourceMatches = [
 "element-6066-11e4-a52e-4f735466cecf", "STALE_ELEMENT_REFERENCE", "crbug.com/40229283",
 "shadow root is detached from the current frame","stale element not found in the current frame"]
 
+const stackScriptInjectionMatches = {
+    "pyppeteer":"    at [\\s\\S]* \\(__pyppeteer_evaluation_script__:[0-9]+:[0-9]+\\)",
+    "puppeteer":"    at [\\s\\S]* \\(__puppeteer_evaluation_script__:[0-9]+:[0-9]+\\)"
+}
+
+const hookers = [
+    ["HTMLElement", "click"],
+    ["HTMLElement","querySelector"],
+    ["HTMLElement","querySelectorAll"],
+]
+
 const brotectorBanner = `
 
 
@@ -27,17 +38,6 @@ function isEmpty() {
     for (var prop in this) if (this.hasOwnProperty(prop)) return false;
     return true;
 };
-
-function hookFunc(obj, func, callback){
-    proxy = new Proxy(globalThis[obj].prototype[func], {
-      apply: (target, thisArg, argumentsList) => {
-        callback(target, thisArg, argumentsList)
-        return Reflect.apply(target, thisArg, argumentsList)
-      }
-        }
-    );
-    Object.defineProperty(globalThis[obj].prototype, func, {value:proxy})
-}
 
 async function getHighEntropyValues(){
     const n = globalThis.navigator? globalThis.navigator: globalThis.WorkerNavigator
@@ -126,6 +126,10 @@ class Brotector {
     this.hook_canvasVisualize()
     this.hook_SeleniumScriptInjection()
 
+    for (const [obj, func] of hookers){
+        this.hookFunc(obj, func, ()=>{})
+    }
+
     Object.defineProperty(Error.prototype, 'name', {
                 configurable: false,
                 enumerable: false,
@@ -148,6 +152,28 @@ class Brotector {
   async intervalled(){
     this.test_runtimeEnabled()
     this.test_PWinitScripts()
+  }
+  hookFunc(obj, func, callback){
+    const proxy = new Proxy(globalThis[obj].prototype[func], {
+      apply: ((target, thisArg, argumentsList) => {
+        callback(target, thisArg, argumentsList)
+        try{this.test_stack(`${obj}:${func}`, argumentsList)}catch(e){console.error(e)};
+        return Reflect.apply(target, thisArg, argumentsList)
+      }).bind(this)
+    }
+    );
+    Object.defineProperty(globalThis[obj].prototype, func, {value:proxy})
+}
+  test_stack(hook, args){
+      var stack
+      try{throw Error()}catch(e){stack = e.stack}
+      for (const line of stack.split("\n")){
+        for (const [type, regex] of Object.entries(stackScriptInjectionMatches)){
+            if(line.match(regex)){
+                this.log({detection:"stack.signature", type:type, score:0.9, data:{stack:stack, hook:hook}})
+            }
+        }
+      }
   }
   test_navigator_webdriver(){
     if(navigator.webdriver === true){
@@ -284,7 +310,7 @@ class Brotector {
     }
   }
   hook_canvasVisualize() {
-    hookFunc("CanvasRenderingContext2D", "arc", this.canvasVisualizeHandler.bind(this))
+    this.hookFunc("CanvasRenderingContext2D", "arc", this.canvasVisualizeHandler.bind(this))
   }
   canvasVisualizeHandler(target, thisArg, argumentsList){
       if(this._canvasMouseVisualizer){return}
@@ -303,7 +329,7 @@ class Brotector {
       }
   }
   hook_SeleniumScriptInjection(){
-    hookFunc("Function", "apply", this.SeleniumScriptInjectionHandler.bind(this))
+    this.hookFunc("Function", "apply", this.SeleniumScriptInjectionHandler.bind(this))
   }
   SeleniumScriptInjectionHandler(target, thisArg, argumentsList){
     let code = thisArg.toString()

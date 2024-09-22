@@ -31,29 +31,35 @@ async def detect(page):
 @pytest.mark.asyncio
 async def test_pyppeteer():
     browser = await asyncio.wait_for(launch(headless=False, executablePath=find_chrome_executable(),
-                           ignoreDefaultArgs=False, args=[*extra_args]),10)
-    page = await browser.newPage()
-    with pytest.raises(Detected):
-        await detect(page)
-    await browser.close()
+                                            ignoreDefaultArgs=False, args=[*extra_args]), 10)
+    try:
+        page = await browser.newPage()
+        with pytest.raises(Detected):
+            await detect(page)
+    finally:
+        await browser.close()
 
 
 @pytest.mark.asyncio
 async def test_pyppeteer_stealthy():
     browser = await asyncio.wait_for(launch(headless=False, executablePath=find_chrome_executable(),
-                           args=['--disable-blink-features=AutomationControlled', *extra_args]), 10)
-    page = await browser.newPage()
-    with pytest.raises(Detected):
-        await detect(page)
-    await browser.close()
+                                            args=['--disable-blink-features=AutomationControlled', *extra_args]), 10)
+    try:
+        page = await browser.newPage()
+        with pytest.raises(Detected):
+            await detect(page)
+    finally:
+        await browser.close()
 
 
 @pytest.mark.asyncio
 async def test_pyppeteer_stealth():
     browser = await asyncio.wait_for(launch(headless=False, executablePath=find_chrome_executable(),
-                           args=['--disable-blink-features=AutomationControlled', *extra_args]),10)
-    page = await browser.newPage()
-    with pytest.raises(Detected):
-        await stealth(page)
-        await detect(page)
-    await browser.close()
+                                            args=['--disable-blink-features=AutomationControlled', *extra_args]), 10)
+    try:
+        page = await browser.newPage()
+        with pytest.raises(Detected):
+            await stealth(page)
+            await detect(page)
+    finally:
+        await browser.close()
