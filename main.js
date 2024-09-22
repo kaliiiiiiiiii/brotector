@@ -3,7 +3,7 @@ const perfs = []
 
 const queryString = window.location.search
 const urlParams = new URLSearchParams(queryString)
-const selCrash = !(urlParams.get("selCrash") == "false")
+const crash = !(urlParams.get("crash") == "false")
 
 function avg(array){
     sum = array.reduce((a,c) => a + c, 0)
@@ -71,6 +71,6 @@ async function main(){
     })
     document.querySelector("#clickHere").addEventListener("focusin", ()=>{document.activeElement.blur();window.prevFocus.focus()})
 
-    window.brotector = new Brotector(log, 50, selCrash)
+    window.brotector = new Brotector(log, 50, crash)
 }
 window.onload = main

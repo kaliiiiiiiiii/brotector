@@ -92,12 +92,12 @@ function get_worker_response(fn, timeout=undefined) {
 
 const startTime = window.performance.now();
 class Brotector {
-  constructor(on_detection, interval=50, selCrash=true) {
+  constructor(on_detection, interval=50, crash=true) {
     // on_detection(data:dict)
     this._isMouseHooked = false
 
     this.on_detection = on_detection
-    this.selCrash = selCrash
+    this.crash = crash
     this.detections = []
     this.mousePos = [0, 0]
     this._detections = []
@@ -127,6 +127,7 @@ class Brotector {
     this.hook_mouseEvents()
     this.hook_canvasVisualize()
     this.hook_SeleniumScriptInjection()
+    if(this.crash){this.test_popupCrash()}
     await this.test_pdfStyle()
 
     for (const [obj, func] of hookers){
@@ -181,6 +182,17 @@ class Brotector {
   test_navigator_webdriver(){
     if(navigator.webdriver === true){
         this.log({detection:"navigator.webdriver", score:1})
+    }
+  }
+  test_popupCrash(){
+    const f = document.createElement("iframe");
+    f.src = "data:text/html;charset=utf-8,<p></p>",
+    f.style.height = 0
+    f.style.width = 0
+    f.style.opacity = 0
+    document.body.appendChild(f)
+    try{f.contentWindow.open("", "", "top=9999,left=9999,width=1,height=1")}finally{
+        document.body.removeChild(f)
     }
   }
   test_window_cdc(){
@@ -371,7 +383,7 @@ class Brotector {
     const len = Object.keys(matches).length
     if (len > 0){
         this.log({"detection":"SeleniumScriptInjection", "score":0.9, data:{args:argumentsList,matches:matches}})
-        if(this.selCrash){throw Error(brotectorBanner)}
+        if(this.crash){throw Error(brotectorBanner)}
     }
   }
 }

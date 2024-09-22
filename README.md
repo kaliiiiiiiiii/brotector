@@ -1,17 +1,17 @@
 # Brotector
 
 
-Detects webdrivers such as:
+Detects or even **crashes** (❌) webdrivers such as:
 - [x] [driverless](https://github.com/kaliiiiiiiiii/Selenium-Driverless)
   - [ ] **with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches)**
-- [x] [selenium](https://github.com/SeleniumHQ/selenium/tree/trunk/py#selenium-client-driver)
+- [x] [selenium](https://github.com/SeleniumHQ/selenium/tree/trunk/py#selenium-client-driver) ❌
   - [x] [undetected-chromedriver](https://github.com/ultrafunkamsterdam/undetected-chromedriver)
   - [x] [seleniumbase](https://github.com/seleniumbase/SeleniumBase)
-- [x] [puppeteer](https://github.com/puppeteer/puppeteer)
-  - [ ] [puppeteer-extra-stealth](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth#puppeteer-extra-plugin-stealth---) (no test yet)
+- [x] [puppeteer](https://github.com/puppeteer/puppeteer) ❌
+  - [ ] [puppeteer-extra-stealth](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth#puppeteer-extra-plugin-stealth---)
   - [x] [pyppeteer](https://github.com/pyppeteer/pyppeteer)
     - [x] [pyppeteer-stealth](https://github.com/MeiK2333/pyppeteer_stealth)
-- [x] [playwright](https://github.com/microsoft/playwright-python)
+- [x] [playwright](https://github.com/microsoft/playwright-python) ❌
   - [x] [undetected-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
     - [ ] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches) (no test yet)
   - [x] [botright](https://github.com/Vinyzu/Botright)
@@ -72,7 +72,7 @@ see [`Event.isTrusted`](https://developer.mozilla.org/en-US/docs/Web/API/Event/i
 ----
 #### SeleniumScriptInjection
 - Detects when selenium tries to [inject a script](https://github.com/kaliiiiiiiiii/brotector/issues/6) (even used for finding elements)
-- makes selenium (any chromedriver-based framework) crash (bypassable for testing [`?selCrash=false`](https://kaliiiiiiiiii.github.io/brotector/?selCrash=false))
+- makes selenium (any chromedriver-based framework) crash (bypassable for testing [`?crash=false`](https://kaliiiiiiiiii.github.io/brotector/?crash=false))
 - just **don't use selenium** lol
 
 ----
@@ -86,6 +86,11 @@ detects injected javascript based on the stack trace in hooks
 ----
 #### pdfStyle
 a detection regarding PDF rendering, specific to puppeteer [github issue](https://github.com/kaliiiiiiiiii/brotector/issues/5)
+
+----
+#### popupCrash
+crashes playwright and puppeteer, see [crbug#340836884](https://issues.chromium.org/issues/340836884)
+(bypassable for testing [`?crash=false`](https://kaliiiiiiiiii.github.io/brotector/?crash=false))
 
 ## Contribution
 feel free to

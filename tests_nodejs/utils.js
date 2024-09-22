@@ -18,7 +18,7 @@ const port = await new Promise( res => {
     });
 })
 
-const __server_url__ = `http://localhost:${port}`
+const __server_url__ = `http://localhost:${port}/?crash=false`
 
 const server = new StaticServer({
     rootPath: __main_dir__,            // required, the root of the server file tree

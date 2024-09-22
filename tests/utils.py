@@ -6,7 +6,7 @@ from selenium_driverless.utils.utils import random_port
 __port__ = random_port("localhost")
 
 _dir = str(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-__server_url__ = f"http://localhost:{__port__}/index.html?selCrash=false"
+__server_url__ = f"http://localhost:{__port__}/index.html?crash=false"
 __screenshot_path__ = _dir + "/assets/example_screenshot_headless.png"
 
 
