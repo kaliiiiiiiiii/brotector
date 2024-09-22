@@ -6,7 +6,8 @@ const chromedriverSourceMatches = [
 const stackScriptInjectionMatches = {
     "pyppeteer":"    at [\\s\\S]* \\(__pyppeteer_evaluation_script__:[0-9]+:[0-9]+\\)",
     "puppeteer":"    at [\\s\\S]* \\(__puppeteer_evaluation_script__:[0-9]+:[0-9]+\\)",
-    "puppeteer":"    at pptr:evaluate;file%3A%2F%2F%2F[\\s\\S]*%3A[0-9]+%3A[0-9]+:[0-9]+:[0-9]+"
+    "puppeteer":"    at pptr:evaluate;file%3A%2F%2F%2F[\\s\\S]*%3A[0-9]+%3A[0-9]+:[0-9]+:[0-9]+",
+    "puppeteerStealth":"    at newHandler\\.<computed> \\[as apply\\] \\(<anonymous>:[0-9]+:[0-9]+\\)"
 }
 
 const hookers = [
@@ -158,8 +159,8 @@ class Brotector {
   hookFunc(obj, func, callback){
     const proxy = new Proxy(globalThis[obj].prototype[func], {
       apply: ((target, thisArg, argumentsList) => {
-        callback(target, thisArg, argumentsList)
         try{this.test_stack(`${obj}:${func}`, argumentsList)}catch(e){console.error(e)};
+        callback(target, thisArg, argumentsList)
         return Reflect.apply(target, thisArg, argumentsList)
       }).bind(this)
     }

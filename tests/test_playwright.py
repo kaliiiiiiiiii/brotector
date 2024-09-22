@@ -1,6 +1,6 @@
 import pytest
 import asyncio
-from utils import __hml_path__, Detected, assert_detections
+from utils import __server_url__, Detected, assert_detections
 from playwright import async_api
 from undetected_playwright import async_api as uc_async_api
 import botright
@@ -20,7 +20,7 @@ async def playwright_eval(cdp_session: async_api.CDPSession, script: str, timeou
 async def detect(context: async_api.BrowserContext):
     page = await context.new_page()
     cdp_session = await context.new_cdp_session(page)
-    await page.goto(__hml_path__)
+    await page.goto(__server_url__)
     await asyncio.sleep(0.5)
     click_target = await page.query_selector("#clickHere")
     await click_target.click()

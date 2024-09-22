@@ -7,7 +7,7 @@ Detects webdrivers such as:
 - [x] [selenium](https://github.com/SeleniumHQ/selenium/tree/trunk/py#selenium-client-driver)
   - [x] [undetected-chromedriver](https://github.com/ultrafunkamsterdam/undetected-chromedriver)
   - [x] [seleniumbase](https://github.com/seleniumbase/SeleniumBase)
-- [ ] [puppeteer](https://github.com/puppeteer/puppeteer) (not test yet)
+- [x] [puppeteer](https://github.com/puppeteer/puppeteer)
   - [ ] [puppeteer-extra-stealth](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth#puppeteer-extra-plugin-stealth---) (no test yet)
   - [x] [pyppeteer](https://github.com/pyppeteer/pyppeteer)
     - [x] [pyppeteer-stealth](https://github.com/MeiK2333/pyppeteer_stealth)
@@ -15,7 +15,8 @@ Detects webdrivers such as:
   - [x] [undetected-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
     - [ ] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches) (no test yet)
   - [x] [botright](https://github.com/Vinyzu/Botright)
-    - [ ] with [uc-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
+    - [x] with [uc-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
+      - [ ] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches) (no test yet)
 - [x] [nodriver](https://github.com/ultrafunkamsterdam/nodriver)
 
 For the tests, each webdriver has at least to click the button with the **ID** `clickHere`

@@ -6,17 +6,24 @@ const script = async ()=>{
     return brotector.detections
 }
 
-const browser = await puppeteer.launch({ headless: false });
-try{
+async function test(browser){
     const page = await browser.newPage();
-
-    // Navigate the page to a URL.
     await page.goto(__server_url__);
     await sleep(500)
     await page.click("#clickHere")
     const detections = await page.evaluate(script)
     if(detections.length == 0){throw Error("Not detected")}
     console.log(detections)
-}finally{
-    await browser.close();
 }
+
+async function test_puppeteer(){
+    const browser = await puppeteer.launch({ headless: false });
+    try{
+        test(browser)
+    }finally{
+        await browser.close();
+    }
+
+}
+
+await test_puppeteer()

@@ -5,7 +5,7 @@ from selenium_driverless.utils.utils import read
 from selenium_driverless.types.target import Target
 from selenium_driverless.types.by import By
 from cdp_patches.input import AsyncInput
-from utils import __hml_path__, Detected, assert_detections
+from utils import __server_url__, Detected, assert_detections
 import pytest
 import asyncio
 
@@ -16,7 +16,7 @@ async def detect(target: Target, cdp_patches_input: typing.Union[AsyncInput, typ
         await brotector.init_done; 
         return brotector.detections
     """
-    await target.get(__hml_path__)
+    await target.get(__server_url__)
     if add_visualizer:
         await target.execute_script(script=await read("/files/js/show_mousemove.js", sel_root=True))
     await asyncio.sleep(0.5)

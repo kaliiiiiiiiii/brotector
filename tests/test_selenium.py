@@ -10,7 +10,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
-from utils import __hml_path__, Detected, assert_detections, __screenshot_path__
+from utils import __server_url__, Detected, assert_detections, __screenshot_path__
 
 
 def sel_eval(driver: webdriver.Chrome, script: str, timeout: float = 5):
@@ -29,10 +29,10 @@ def detect(driver, is_uc=False):
         is_sb = False
         if isinstance(driver, seleniumbase.BaseCase):
             is_sb = True
-            driver.uc_open_with_reconnect(__hml_path__, 0.1)
+            driver.uc_open_with_reconnect(__server_url__, 0.1)
             driver.disconnect()
         else:
-            driver.get(__hml_path__)
+            driver.get(__server_url__)
 
         if is_sb:
             driver.connect()
@@ -56,7 +56,7 @@ def detect(driver, is_uc=False):
                 print(detections)
                 print("\n")
                 raise Detected(detections)
-            time.sleep(5)
+            time.sleep(2)
     except WebDriverException as e:
         if not is_uc:
             driver.quit()

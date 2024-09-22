@@ -1,6 +1,6 @@
 import nodriver
 import nodriver as uc
-from utils import __hml_path__, Detected, assert_detections
+from utils import __server_url__, Detected, assert_detections
 import pytest
 import asyncio
 
@@ -16,7 +16,7 @@ async def detect(page: nodriver.Tab):
         await brotector.init_done; 
         return brotector.detections
     """
-    await page.get(__hml_path__)
+    await page.get(__server_url__)
     await asyncio.sleep(0.5)
     click_target = None
     while click_target is None:
