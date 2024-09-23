@@ -89,7 +89,7 @@ a detection regarding PDF rendering, specific to puppeteer [github issue](https:
 
 ----
 #### popupCrash
-crashes playwright and puppeteer, see [crbug#340836884](https://issues.chromium.org/issues/340836884)
+crashes chrome when automated with playwright or puppeteer due to [crbug#340836884](https://issues.chromium.org/issues/340836884)
 (bypassable for testing [`?crash=false`](https://kaliiiiiiiiii.github.io/brotector/?crash=false))
 
 ## Contribution
