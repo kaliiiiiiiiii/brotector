@@ -85,7 +85,10 @@ detects injected javascript based on the stack trace in hooks
 
 ----
 #### pdfStyle
-a detection regarding PDF rendering, specific to puppeteer [github issue](https://github.com/kaliiiiiiiiii/brotector/issues/5)
+a detection regarding PDF rendering,
+specific to puppeteer [github issue](https://github.com/kaliiiiiiiiii/brotector/issues/5) or `--enable-field-trial-config` \
+Note: There might be false-positives
+
 
 ----
 #### popupCrash

@@ -306,7 +306,7 @@ class Brotector {
         }
     })
     if(style){
-        this.log({detection:"pdfStyle",type:"puppeteer", score:0.9, data:{style:style}})
+        this.log({detection:"pdfStyle",score:0.5, data:{style:style}})
     }
   }
   hook_mouseEvents() {
