@@ -43,7 +43,7 @@ occurs when:
   - the user opens the devtools (type=devtools)
 
 -----
-#### Input.cordinatesLeak
+#### Input.coordinatesLeak
 occurs due to [crbug#1477537](https://bugs.chromium.org/p/chromium/issues/detail?id=1477537) \
 [CDP-Patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches) can be used to bypass this
 
@@ -60,7 +60,7 @@ see [`Event.isTrusted`](https://developer.mozilla.org/en-US/docs/Web/API/Event/i
 ----
 #### canvasMouseVisualizer
 `CanvasRenderingContext2D.arc` has been called with
-- cordinates +-5px at current mouse position
+- coordinates +-5px at current mouse position
 - canvas +-1px covers the whole page
 - canvas passes pointerEvents through
 
