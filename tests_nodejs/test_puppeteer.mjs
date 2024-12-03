@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
 import puppeteerExtra from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
-import {__server_url__, sleep} from './utils.js';
+import {__server_url__, sleep} from './utils.mjs';
 
 puppeteerExtra.use(StealthPlugin())
 

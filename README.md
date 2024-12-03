@@ -18,6 +18,7 @@ Detects or even **crashes** (❌) webdrivers such as:
     - [x] with [uc-playwright](https://github.com/kaliiiiiiiiii/undetected-playwright-python) (buggy)
       - [ ] with [cdp-patches](https://github.com/Kaliiiiiiiiii-Vinyzu/CDP-Patches) (no test yet)
 - [x] [nodriver](https://github.com/ultrafunkamsterdam/nodriver)
+- [x] [@ulixee/hero](https://github.com/ulixee/hero)
 
 For the tests, each webdriver has at least to click the button with the **ID** `clickHere`
 
