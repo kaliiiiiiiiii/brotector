@@ -5,7 +5,6 @@ const chromedriverSourceMatches = [
 
 const stackScriptInjectionMatches = {
     "pyppeteer":"    at [\\s\\S]* \\(__pyppeteer_evaluation_script__:[0-9]+:[0-9]+\\)",
-    "puppeteer":"    at [\\s\\S]* \\(__puppeteer_evaluation_script__:[0-9]+:[0-9]+\\)",
     "puppeteer":"    at pptr:evaluate;file%3A%2F%2F%2F[\\s\\S]*%3A[0-9]+%3A[0-9]+:[0-9]+:[0-9]+",
     "puppeteerPluginStealth":"    at newHandler\\.<computed> \\[as apply\\] \\((<anonymous>:[0-9]+:[0-9]+|eval at <anonymous> \\(:[0-9]+:[0-9]+\\), <anonymous>:[0-9]+:[0-9]+)\\)"
 }
